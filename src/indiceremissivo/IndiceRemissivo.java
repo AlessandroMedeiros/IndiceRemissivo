@@ -194,15 +194,17 @@ public class IndiceRemissivo {
     //3
     private void palavraMaisFrequente() {
         int aux = 0;
+        String string = "";
         Palavra primeira = (Palavra) palavras.get(0);
         aux = primeira.getOcorrencias();
         for (int i = 0; i < palavras.size(); i++) {
             Palavra p = (Palavra) palavras.get(i);
             if (p.getOcorrencias() > aux) {
                 aux = p.getOcorrencias();
+                string = p.getValor();
             }
         }
-        System.out.println(aux);
+        System.out.println(aux +" ocorrências da palavra: "+string);
     }
 
     //4

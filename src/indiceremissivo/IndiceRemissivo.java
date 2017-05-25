@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -18,7 +19,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Alessandro
+ * @author Alessandro Medeiros e Lucas Bieniek
  */
 public class IndiceRemissivo {
 
@@ -37,6 +38,8 @@ public class IndiceRemissivo {
     LinkedListOfObject linkedPagina = new LinkedListOfObject();
     LinkedListOfObject palavras = new LinkedListOfObject();
     
+    double numeroDeStopWorsRemivodasDoTexto=0;
+    double numeroDePalavrasTotalDoTexto=0;
 
     public static void main(String[] args) throws IOException {
         IndiceRemissivo doz = new IndiceRemissivo();
@@ -57,9 +60,7 @@ public class IndiceRemissivo {
             case "0":
                 break;
             case "1":
-                System.out.println(new GregorianCalendar().getTime());
                 doz.indiceRemissivo();
-                System.out.println(new GregorianCalendar().getTime());
                 break;
             case "2":
                 doz.porcentagemStopWords();
@@ -73,7 +74,6 @@ public class IndiceRemissivo {
             case "5":
                 doz.paginaComplexa();
                 break;
-
             default:
                 JOptionPane.showMessageDialog(null, "O código informado é inválido.");
                 break;
@@ -109,6 +109,7 @@ public class IndiceRemissivo {
                 for (int i = 0; i < palavras.length; i++) {
                     if (!"".equals(palavras[i].trim())) {
                         livro.add(palavras[i]);
+                        numeroDePalavrasTotalDoTexto++;
                     }
                 }
             }
@@ -148,16 +149,15 @@ public class IndiceRemissivo {
 
     private void removeStopWords() {
         System.out.println("\nRemovendo stopwords...");
-        int contador = 0;
         for (int i = 0; i < listaStopWords.size(); i++) {
             for (int j = 0; j < livro.size(); j++) {
                 if (livro.get(j).equals(listaStopWords.get(i))) {
                     livro.remove(j);
-                    contador++;
+                    numeroDeStopWorsRemivodasDoTexto++;
                 }
             }
         }
-        System.out.println("Foram removidos " + contador + " stopwords");
+        System.out.println("Foram removidos " + numeroDeStopWorsRemivodasDoTexto + " stopwords");
     }
 
     private void paginas() {
@@ -184,6 +184,10 @@ public class IndiceRemissivo {
 
     //2
     private void porcentagemStopWords() {
+        double percentual;
+        percentual = (numeroDeStopWorsRemivodasDoTexto*100)/numeroDePalavrasTotalDoTexto;
+        String resultado = String.format("%.2f", percentual);
+        System.out.println(resultado+"%");
     }
 
     //3

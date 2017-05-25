@@ -37,9 +37,9 @@ public class IndiceRemissivo {
     LinkedListOfObject linkedLinha = new LinkedListOfObject();
     LinkedListOfObject linkedPagina = new LinkedListOfObject();
     LinkedListOfObject palavras = new LinkedListOfObject();
-    
-    double numeroDeStopWorsRemivodasDoTexto=0;
-    double numeroDePalavrasTotalDoTexto=0;
+
+    double numeroDeStopWorsRemivodasDoTexto = 0;
+    double numeroDePalavrasTotalDoTexto = 0;
 
     public static void main(String[] args) throws IOException {
         IndiceRemissivo doz = new IndiceRemissivo();
@@ -172,7 +172,8 @@ public class IndiceRemissivo {
             aux = aux + linha.get(i) + "\n";
         }
         System.out.println("Foram geradas " + pagina.size() + " páginas...");
-    }    
+    }
+
     //1
     private void indiceRemissivo() {
         System.out.println("\nCriando um indice remissivo...");
@@ -185,13 +186,23 @@ public class IndiceRemissivo {
     //2
     private void porcentagemStopWords() {
         double percentual;
-        percentual = (numeroDeStopWorsRemivodasDoTexto*100)/numeroDePalavrasTotalDoTexto;
+        percentual = (numeroDeStopWorsRemivodasDoTexto * 100) / numeroDePalavrasTotalDoTexto;
         String resultado = String.format("%.2f", percentual);
-        System.out.println(resultado+"%");
+        System.out.println(resultado + "%");
     }
 
     //3
     private void palavraMaisFrequente() {
+        int aux = 0;
+        Palavra primeira = (Palavra) palavras.get(0);
+        aux = primeira.getOcorrencias();
+        for (int i = 0; i < palavras.size(); i++) {
+            Palavra p = (Palavra) palavras.get(i);
+            if (p.getOcorrencias() > aux) {
+                aux = p.getOcorrencias();
+            }
+        }
+        System.out.println(aux);
     }
 
     //4

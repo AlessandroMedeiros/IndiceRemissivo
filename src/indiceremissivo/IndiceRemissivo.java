@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class IndiceRemissivo {
 
-    String entrada = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/java.txt";
+    String entrada = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/alice.txt";
     String saida = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/Saida.txt";
     String stopwords = "C:/Users/IBM_ADMIN/Desktop/Alessandro Pessoal/T2 - AED/stopwords.txt";
 

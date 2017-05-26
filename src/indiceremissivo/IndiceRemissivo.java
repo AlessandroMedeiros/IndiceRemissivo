@@ -36,10 +36,9 @@ public class IndiceRemissivo {
     LinkedListOfObject linkedPagina = new LinkedListOfObject();
     LinkedListOfObject palavras = new LinkedListOfObject();
 
-    double numeroDeStopWorsRemivodasDoTexto = 0;
-    double numeroDePalavrasTotalDoTexto = 0;
+    int numeroDeStopWorsRemivodasDoTexto = 0;
+    int numeroDePalavrasTotalDoTexto = 0;
 
-    @SuppressWarnings("empty-statement")
     public static void main(String[] args) throws IOException {
         IndiceRemissivo doz = new IndiceRemissivo();
         doz.lendoArquivos();
@@ -70,7 +69,9 @@ public class IndiceRemissivo {
                 doz.palavraMaisFrequente();
                 break;
             case "4":
-                doz.pesquisarPalavra("teste");
+                String string;
+                string = JOptionPane.showInputDialog("Digite a palavra a ser pesquisada: ");
+                doz.pesquisarPalavra(string);
                 break;
             case "5":
                 doz.paginaComplexa();
@@ -173,6 +174,10 @@ public class IndiceRemissivo {
             }
             aux = aux + linha.get(i) + "\n";
         }
+        pagina.add(aux); // Adicionando a última página... pois a última pagina não tem 40 linhas, portanto não é divisível por 40.
+        for(int i=0; i<pagina.size(); i++){
+            linkedPagina.add(pagina.get(i));
+        }
         System.out.println("Foram geradas " + pagina.size() + " páginas...");
     }
 
@@ -209,11 +214,17 @@ public class IndiceRemissivo {
         System.out.println(aux +" ocorrências da palavra: "+string);
     }
 
-    //4
+    /*4.Pesquisar palavra (o usuário informa uma palavra; o sistema mostra as 
+        páginas em que a palavra ocorre; na sequência, o usuário escolhe a página; 
+        o sistema exibe a página na tela, circundando a palavra informada com sinais de [ e ]);
+    */
     private void pesquisarPalavra(String palavra) {
+        
     }
 
-    //5
+    /*5. Encontrar página complexa (o sistema descobre e informa a página que contém
+    o maior número de palavras indexadas, informando quantas são).*/
     private void paginaComplexa() {
+        
     }
 }

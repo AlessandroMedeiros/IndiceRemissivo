@@ -11,10 +11,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,7 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class IndiceRemissivo {
 
-    String entrada = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/alice.txt";
+    String entrada = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/java.txt";
     String saida = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/Saida.txt";
     String stopwords = "C:/Users/IBM_ADMIN/Desktop/Alessandro Pessoal/T2 - AED/stopwords.txt";
 
@@ -41,6 +39,7 @@ public class IndiceRemissivo {
     double numeroDeStopWorsRemivodasDoTexto = 0;
     double numeroDePalavrasTotalDoTexto = 0;
 
+    @SuppressWarnings("empty-statement")
     public static void main(String[] args) throws IOException {
         IndiceRemissivo doz = new IndiceRemissivo();
         doz.lendoArquivos();
@@ -49,7 +48,9 @@ public class IndiceRemissivo {
         doz.ordenarSemRepeticao();
         doz.paginas();
 
-        String valor = JOptionPane.showInputDialog("INDICE REMISSIVO \n\n Menu\n "
+        String valor="";
+        do{
+        valor = JOptionPane.showInputDialog("INDICE REMISSIVO \n\n Menu\n "
                 + "\n0 - SAIR\n"
                 + "\n1 - Exibir todo o índice remissivo (em ordem alfabética)\n"
                 + "\n2 - Exibir o percentual de stopwords do texto (quanto % do texto é formado por stopwords)\n"
@@ -78,6 +79,7 @@ public class IndiceRemissivo {
                 JOptionPane.showMessageDialog(null, "O código informado é inválido.");
                 break;
         }
+        }while(!valor.equals("0"));
     }
 
     private void lendoArquivos() {

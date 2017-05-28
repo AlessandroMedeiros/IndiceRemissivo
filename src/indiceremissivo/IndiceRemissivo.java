@@ -21,104 +21,107 @@ import javax.swing.JOptionPane;
  */
 public class IndiceRemissivo {
 
-    String entrada = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/alice.txt";
-    String saida = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/Saida.txt";
-    String stopwords = "C:/Users/IBM_ADMIN/Desktop/Alessandro Pessoal/T2 - AED/stopwords.txt";
+    private String entrada = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/alice.txt";
+    private String saida = "C:/Users/IBM_ADMIN/Desktop/T2 - AED/Saida.txt";
+    private String stopwords = "C:/Users/IBM_ADMIN/Desktop/Alessandro Pessoal/T2 - AED/stopwords.txt";
 
-    File arquivo1 = new File("C:/Users/IBM_ADMIN/Desktop/Alessandro Pessoal/T2 - AED/Saida.txt");
+    private ArrayList<String> livro = new ArrayList<>();
+    private ArrayList<String> listaStopWords = new ArrayList<>();
+    private ArrayList<String> linha = new ArrayList<>();
+    private ArrayList<String> pagina = new ArrayList<>();
+    private LinkedListOfObject linkedPagina = new LinkedListOfObject();
+    private LinkedListOfObject palavras = new LinkedListOfObject();
 
-    ArrayList<String> livro = new ArrayList<>();
-    ArrayList<String> listaStopWords = new ArrayList<>();
-    ArrayList<String> linha = new ArrayList<>();
-    ArrayList<String> pagina = new ArrayList<>();
-    LinkedListOfObject linkedLivro = new LinkedListOfObject();
-    LinkedListOfObject linkedLinha = new LinkedListOfObject();
-    LinkedListOfObject linkedPagina = new LinkedListOfObject();
-    LinkedListOfObject palavras = new LinkedListOfObject();
-
-    int numeroDeStopWorsRemivodasDoTexto = 0;
-    int numeroDePalavrasTotalDoTexto = 0;
+    private int numeroDeStopWorsRemivodasDoTexto = 0;
+    private int numeroDePalavrasTotalDoTexto = 0;
 
     public static void main(String[] args) throws IOException {
-        IndiceRemissivo doz = new IndiceRemissivo();
-        doz.lendoArquivos();
-        doz.removeStopWords();
-        System.out.println("\nOrdenando o arquivo livro em ordem alfabética...");
-        doz.ordenarSemRepeticao();
-        doz.paginas();
+        IndiceRemissivo indiceRemissivo = new IndiceRemissivo();
+        indiceRemissivo.lendoArquivos();
+        indiceRemissivo.removeStopWords(); //remove stopWords do livro
 
-        String valor="";
-        do{
-        valor = JOptionPane.showInputDialog("INDICE REMISSIVO \n\n Menu\n "
-                + "\n0 - SAIR\n"
-                + "\n1 - Exibir todo o índice remissivo (em ordem alfabética)\n"
-                + "\n2 - Exibir o percentual de stopwords do texto (quanto % do texto é formado por stopwords)\n"
-                + "\n3 - Encontrar a palavra mais frequente, isto é, com maior número de ocorrências\n"
-                + "\n4 - Pesquisar palavra (o usuário informa uma palavra; o sistema mostra as páginas em que a palavra ocorre;\n na sequência, o usuário escolhe a página; o sistema exibe a página na tela, circundando a palavra informada com sinais de [ e ]);\n"
-                + "\n5 - Encontrar página complexa (o sistema descobre e informa a página que contém o maior número de palavras indexadas, informando quantas são).\n\n");
-        switch (valor) {
-            case "0":
-                break;
-            case "1":
-                doz.indiceRemissivo();
-                break;
-            case "2":
-                doz.porcentagemStopWords();
-                break;
-            case "3":
-                doz.palavraMaisFrequente();
-                break;
-            case "4":
-                String string;
-                string = JOptionPane.showInputDialog("Digite a palavra a ser pesquisada: ");
-                doz.pesquisarPalavra(string);
-                break;
-            case "5":
-                doz.paginaComplexa();
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "O código informado é inválido.");
-                break;
+        System.out.println("\nOrdenando o arquivo livro em ordem alfabética...");
+
+        indiceRemissivo.ordenarSemRepeticao();
+        indiceRemissivo.paginas();
+
+        String valor;
+        do {
+            valor = JOptionPane.showInputDialog("Índice Remissivo \n\nMenu(as respostas estarão no terminal da IDE)\n "
+                    + "\n0 - SAIR\n"
+                    + "\n1 - Exibir todo o índice remissivo (em ordem alfabética)\n"
+                    + "\n2 - Exibir o percentual de stopwords do texto (quanto % do texto é formado por stopwords)\n"
+                    + "\n3 - Encontrar a palavra mais frequente, isto é, com maior número de ocorrências\n"
+                    + "\n4 - Pesquisar palavra (o usuário informa uma palavra; o sistema mostra as páginas em que a palavra ocorre;\n na sequência, o usuário escolhe a página; o sistema exibe a página na tela, circundando a palavra informada com sinais de [ e ]);\n"
+                    + "\n5 - Encontrar página complexa (o sistema descobre e informa a página que contém o maior número de palavras indexadas, informando quantas são).\n\n");
+            switch (valor) {
+                case "0":
+                    System.exit(0);
+                    break;
+                case "1":
+                    indiceRemissivo.indiceRemissivo();
+                    break;
+                case "2":
+                    indiceRemissivo.porcentagemStopWords();
+                    break;
+                case "3":
+                    indiceRemissivo.palavraMaisFrequente();
+                    break;
+                case "4":
+                    String string;
+                    string = JOptionPane.showInputDialog("Digite a palavra a ser pesquisada: ");
+                    indiceRemissivo.pesquisarPalavra(string);
+                    break;
+                case "5":
+                    indiceRemissivo.paginaComplexa();
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "O código informado é inválido.");
+                    break;
+            }
+        } while(!valor.equals("0"));
+    }
+
+    private void carregarStopWords() throws IOException {
+        BufferedReader brStopWords = new BufferedReader(new FileReader(stopwords)); // Recebe o arquivo stopwords.txt
+        System.out.println("Carregando o arquivo: " + stopwords);
+        while (brStopWords.ready()) {
+            String stopWords = brStopWords.readLine();
+            listaStopWords.add(stopWords);
         }
-        }while(!valor.equals("0"));
+        brStopWords.close();
+    }
+
+    private void carregaArquivoEntrada() throws IOException {
+        BufferedReader brEntrada = new BufferedReader(new FileReader(entrada)); // Recebe o arquivo Alice.txt
+        System.out.println("Carregando o arquivo: " + entrada);
+        while (brEntrada.ready()) {
+
+            String linha = brEntrada.readLine().toLowerCase();
+            linha = linha.replaceAll("--", " ").trim();
+            linha = linha.replaceAll("[^a-z ]", "").trim();
+
+            if (!"".equals(linha)) this.linha.add(linha);
+
+            String[] palavras = linha.split(" ");
+
+            for (int i = 0; i < palavras.length; i++) {
+                if (!"".equals(palavras[i].trim())) {
+                    livro.add(palavras[i]);
+                    numeroDePalavrasTotalDoTexto++;
+                }
+            }
+        }
+        brEntrada.close();
     }
 
     private void lendoArquivos() {
-
         try {
-
-            BufferedReader br = new BufferedReader(new FileReader(entrada)); // Recebe o arquivo Alice.txt
-            BufferedReader brStopWords = new BufferedReader(new FileReader(stopwords));
             BufferedWriter buffWrite = new BufferedWriter(new FileWriter(saida));
 
-            System.out.println("Carregando o arquivo: " + stopwords);
-            while (brStopWords.ready()) {
-                String stopWords = brStopWords.readLine();
-                listaStopWords.add(stopWords);
-            }
-            System.out.println("Carregando o arquivo: " + entrada);
-            while (br.ready()) {
+            carregarStopWords();
+            carregaArquivoEntrada();
 
-                String linha = br.readLine().toLowerCase();
-                linha = linha.replaceAll("--", " ").trim();
-                linha = linha.replaceAll("[^a-z ]", "").trim();
-
-                if (!"".equals(linha)) {
-                    this.linha.add(linha);
-                }
-
-                String[] palavras = linha.split(" ");
-
-                for (int i = 0; i < palavras.length; i++) {
-                    if (!"".equals(palavras[i].trim())) {
-                        livro.add(palavras[i]);
-                        numeroDePalavrasTotalDoTexto++;
-                    }
-                }
-            }
-
-            br.close();
-            brStopWords.close();
             buffWrite.close();
         } catch (IOException e) {
             System.out.println(e);
@@ -127,7 +130,7 @@ public class IndiceRemissivo {
 
     private void ordenarSemRepeticao() {
         ArrayList<String> lista = livro;
-        Collections.sort(lista);    //Ordena a lista
+        Collections.sort(lista); //Ordena a lista
         int contador = 0;
         boolean help = false;
         Palavra p = new Palavra("", 0);
@@ -147,7 +150,6 @@ public class IndiceRemissivo {
             help = false;
         }
         System.out.println("Foram ordenadas " + contador + " palavras");
-        linkedLivro = palavras;
     }
 
     private void removeStopWords() {
@@ -167,7 +169,6 @@ public class IndiceRemissivo {
         System.out.println("\nCriando páginas com 40 linhas cada...");
         String aux = "";
         for (int i = 0; i < linha.size(); i++) {
-
             if (i % 40 == 0D && i != 0) {
                 pagina.add(aux);
                 aux = "";
@@ -200,7 +201,7 @@ public class IndiceRemissivo {
 
     //3
     private void palavraMaisFrequente() {
-        int aux = 0;
+        int aux;
         String string = "";
         Palavra primeira = (Palavra) palavras.get(0);
         aux = primeira.getOcorrencias();
@@ -214,17 +215,44 @@ public class IndiceRemissivo {
         System.out.println(aux +" ocorrências da palavra: "+string);
     }
 
-    /*4.Pesquisar palavra (o usuário informa uma palavra; o sistema mostra as 
-        páginas em que a palavra ocorre; na sequência, o usuário escolhe a página; 
-        o sistema exibe a página na tela, circundando a palavra informada com sinais de [ e ]);
-    */
+    /*4.Pesquisar palavra (o usuário informa uma palavra; o sistema mostra as
+            páginas em que a palavra ocorre; na sequência, o usuário escolhe a página;
+            o sistema exibe a página na tela, circundando a palavra informada com sinais de [ e ]);
+         */
     private void pesquisarPalavra(String palavra) {
-        
+        String valor;
+        int pag;
+        String aux="";
+        for(int i=0; i<linkedPagina.size(); i++){
+            if(String.valueOf(linkedPagina.get(i)).contains(palavra)){
+                aux = aux +(i)+",";
+            }
+        }
+        if (aux.length() == 0) {
+            System.out.println("A palavra: "+palavra+" não econtra-se no livro");
+        } else {
+            System.out.println("A palavra: "+palavra+" aparece na(as) página(as): "+aux.substring(0, aux.length()-1) + "\n");
+            valor = JOptionPane.showInputDialog("Digite o número da página para ver a palavra "+palavra+" na pagina:");
+            pag = Integer.valueOf(valor);
+            if (pagina.get(pag) != null) {
+                String string = pagina.get(pag);
+                string = string.replace(palavra, "["+palavra+"]");
+                System.out.println(string);
+            }
+        }
     }
 
     /*5. Encontrar página complexa (o sistema descobre e informa a página que contém
     o maior número de palavras indexadas, informando quantas são).*/
     private void paginaComplexa() {
-        
+        int pagina = 0;
+        int numeroDePalavras = 0;
+        for (int i = 0; i < linkedPagina.size(); i++) {
+            if (((String) linkedPagina.get(i)).split(" ").length > numeroDePalavras) {
+                numeroDePalavras = ((String) linkedPagina.get(i)).split(" ").length;
+                pagina = i;
+            }
+        }
+        System.out.println("A página " + (pagina + 1) + " possui " + numeroDePalavras + " palavras. Ela é a mais complexa do livro");
     }
 }

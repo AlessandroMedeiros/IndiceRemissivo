@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package indiceremissivo;
 
 /**
@@ -10,13 +5,14 @@ package indiceremissivo;
  * @author Alessandro
  */
 public class Palavra {
-    LinkedListOfObject paginas = new LinkedListOfObject();
-    String valor;
-    int ocorrencias;
+    private LinkedListOfObject paginas;
+    private String valor;
+    private int ocorrencias;
 
     public Palavra(String valor, int ocorrencias) {
         this.valor = valor;
         this.ocorrencias = ocorrencias;
+        this.paginas = new LinkedListOfObject();
     }
     
     @Override
@@ -47,7 +43,5 @@ public class Palavra {
     public void setPaginas(LinkedListOfObject paginas) {
         this.paginas = paginas;
     }
-    
-    
-    
+
 }

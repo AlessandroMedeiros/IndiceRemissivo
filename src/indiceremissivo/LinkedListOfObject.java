@@ -14,8 +14,8 @@ public class LinkedListOfObject {
     // Classe interna Node
     private class Node {
 
-        public Object element;
-        public Node next;
+        private Object element;
+        private Node next;
 
         public Node(Object element) {
             this.element = element;

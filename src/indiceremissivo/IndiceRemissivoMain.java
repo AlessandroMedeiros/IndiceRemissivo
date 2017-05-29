@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static indiceremissivo.Arquivos.ENTRADA;
+import static indiceremissivo.Arquivos.SAIDA;
 import static indiceremissivo.Arquivos.STOP_WORDS;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 
 /**
  *
@@ -21,21 +25,24 @@ import static indiceremissivo.Arquivos.STOP_WORDS;
  */
 public class IndiceRemissivoMain {
 
-    private ArrayList<String> livro = new ArrayList<>();
-    private ArrayList<String> stopWordsList = new ArrayList<>();
-    private ArrayList<String> linhaList = new ArrayList<>();
-    private ArrayList<String> paginaList = new ArrayList<>();
-    private LinkedListOfObject linkedPagina = new LinkedListOfObject();
-    private LinkedListOfObject linkedPalavras = new LinkedListOfObject();
+    private final ArrayList<String> livro = new ArrayList<>();
+    private final ArrayList<String> stopWordsList = new ArrayList<>();
+    private final ArrayList<String> linhaList = new ArrayList<>();
+    private final ArrayList<String> paginaList = new ArrayList<>();
+    private final LinkedListOfObject linkedPagina = new LinkedListOfObject();
+    private final LinkedListOfObject linkedPalavras = new LinkedListOfObject();
 
     private int numeroDeStopWordsRemovidasDoTexto = 0;
     private int numeroDePalavrasTotalDoTexto = 0;
-
+    
+    
+    
     public static void main(String[] args) throws IOException {
+        
         IndiceRemissivoMain indiceRemissivo = new IndiceRemissivoMain();
-        indiceRemissivo.lerArquivos();
+        indiceRemissivo.lerArquivos();      //lendo alice.txt e stopwords.txt
         indiceRemissivo.removeStopWords(); //remove stopWords do livro
-
+        
         System.out.println("Ordenando o arquivo livro em ordem alfabética...");
         indiceRemissivo.ordenarSemRepeticao();
         indiceRemissivo.criaPaginas();
@@ -94,11 +101,11 @@ public class IndiceRemissivoMain {
     private void carregarStopWords() throws IOException {
         BufferedReader brStopWords = new BufferedReader(new FileReader(STOP_WORDS)); // Recebe o arquivo stopwords.txt
         System.out.println("Carregando o arquivo: " + STOP_WORDS);
-
         while (brStopWords.ready()) {
             String stopWords = brStopWords.readLine();
             stopWordsList.add(stopWords);
         }
+        System.out.println("Foram lidas "+ stopWordsList.size()+" stopwords...");
         brStopWords.close();
     }
 
@@ -122,6 +129,7 @@ public class IndiceRemissivoMain {
                 }
             }
         }
+        System.out.println("Foram lidas "+ livro.size()+" palavras...");
         brEntrada.close();
     }
 
@@ -147,7 +155,7 @@ public class IndiceRemissivoMain {
             }
             help = false;
         }
-        System.out.println("Foram ordenadas " + cont + " linkedPalavras");
+        System.out.println("Foram ordenadas " + cont + " palavras");
     }
 
     private void removeStopWords() {
@@ -194,7 +202,7 @@ public class IndiceRemissivoMain {
         double percentual;
         percentual = (numeroDeStopWordsRemovidasDoTexto * 100) / numeroDePalavrasTotalDoTexto;
         String resultado = String.format("%.2f", percentual);
-        System.out.println(resultado + "%");
+        System.out.println(resultado + "% porcento do texto era formado por stopwords.");
     }
 
     //3
@@ -213,13 +221,10 @@ public class IndiceRemissivoMain {
         System.out.println(aux +" ocorrências da palavra: "+string);
     }
 
-    /*4.Pesquisar palavra (o usuário informa uma palavra; o sistema mostra as
-            páginas em que a palavra ocorre; na sequência, o usuário escolhe a página;
-            o sistema exibe a página na tela, circundando a palavra informada com sinais de [ e ]);
-         */
+    //4
     private void pesquisarPalavra(String palavra) {
         String valor;
-        int pag;
+        int pag=-1;
         String aux="";
         for(int i=0; i<linkedPagina.size(); i++){
             if(String.valueOf(linkedPagina.get(i)).contains(palavra)){
@@ -227,12 +232,16 @@ public class IndiceRemissivoMain {
             }
         }
         if (aux.length() == 0) {
-            System.out.println("A palavra: "+palavra+" não econtra-se no livro");
+            System.out.println("A palavra: "+palavra+" não econtra-se no livro.");
         } else {
             System.out.println("A palavra: "+palavra+" aparece na(as) página(as): "+aux.substring(0, aux.length()-1) + "\n");
-            valor = JOptionPane.showInputDialog("Digite o número da página para ver a palavra "+palavra+" na paginaList:");
-            pag = Integer.valueOf(valor);
-            if (paginaList.get(pag) != null) {
+            valor = JOptionPane.showInputDialog("Digite o número da página para ver a palavra "+palavra+" nas páginas: \n" +aux.substring(0, aux.length()-1));
+            if(aux.substring(0, aux.length()-1).contains(valor)){
+                pag = Integer.valueOf(valor);
+            }else{
+                JOptionPane.showMessageDialog(null,"O número que você digitou, não está na lista de páginas mostradas.");
+            }
+            if (pag!=-1) {
                 String string = paginaList.get(pag);
                 string = string.replace(palavra, "["+palavra+"]");
                 System.out.println(string);
@@ -240,8 +249,7 @@ public class IndiceRemissivoMain {
         }
     }
 
-    /*5. Encontrar página complexa (o sistema descobre e informa a página que contém
-    o maior número de linkedPalavras indexadas, informando quantas são).*/
+    //5
     private void paginaComplexa() {
         int pagina = 0;
         int numeroDePalavras = 0;
@@ -251,6 +259,6 @@ public class IndiceRemissivoMain {
                 pagina = i;
             }
         }
-        System.out.println("A página " + (pagina + 1) + " possui " + numeroDePalavras + " linkedPalavras. Ela é a mais complexa do livro");
+        System.out.println("A página " + (pagina + 1) + " possui " + numeroDePalavras + " palavras. Ela é a mais complexa do livro.");
     }
 }
